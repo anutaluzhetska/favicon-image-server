@@ -39,7 +39,6 @@ const server = createServer(async (req, res) => {
         Allowed height: ${limits.minHeight}-${limits.maxHeight}`);
       return;
       }
-
   try {
     const inputImage = readFileSync('./photo.jpg');
     
