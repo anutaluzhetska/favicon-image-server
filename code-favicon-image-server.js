@@ -2,6 +2,14 @@ import { createServer } from 'node:http';
 import { readFileSync } from 'node:fs';
 import sharp from 'sharp';
 const favicon = readFileSync('./favicon-32x32.png');
+
+const limits = {
+  minWidth: 50,
+  minHeight: 50,
+  maxWidth: 5000,
+  maxHeight: 5000
+};
+
 const server = createServer(async (req, res) => {
   console.log(req.url)
   if(req.url === '/favicon.ico') {
@@ -19,6 +27,19 @@ const server = createServer(async (req, res) => {
       return;
     }
   
+    if (
+      width < limits.minWidth || 
+      width > limits.maxWidth || 
+      height < limits.minHeight || 
+      height > limits.maxHeight
+    ) {
+      res.writeHead(400, { 'Content-Type': 'text/plain; charset=utf-8' });
+      res.end(`Error: Dimensions out of range. 
+        Allowed width: ${limits.minWidth}-${limits.maxWidth}
+        Allowed height: ${limits.minHeight}-${limits.maxHeight}`);
+      return;
+      }
+
   try {
     const inputImage = readFileSync('./photo.jpg');
     
